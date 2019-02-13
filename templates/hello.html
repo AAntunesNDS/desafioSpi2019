@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<title>House Price</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body> 
+	<div class="container">
+		<div class="container" align="center">
+			<h2 align="center">House Price Form</h2><br>
+			{% with messages = get_flashed_messages(with_categories=true) %}
+				{% if messages %}
+
+				{% for message in messages %}
+					{% if "Error" not in message[1]: %}
+				
+				<div class="alert alert-info" align="center">
+					<strong>O valor predito da casa, em milhares, é: </strong> {{ message[1] }}
+				</div>
+					{% endif %}
+
+					{% if "Error" in message[1]: %}
+					<div align="center" class="alert alert-warning">
+					{{ message[1] }}</div>
+					{% endif %}
+				{% endfor %}
+				{% endif %}
+			{% endwith %}
+		</div>
+		<form action="" method="post" role="form" class="form-horizontal">
+			{{ form.hidden_tag() }}
+
+			<div>
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="crim">CRIM:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="crim" name="crim" placeholder="Enter CRIM">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="zn">ZN:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="zn" name="zn" placeholder="Enter ZN">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="indus">INDUS:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="indus" name="indus" placeholder="Enter INDUS">
+					</div>
+				</div>	
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="chas">CHAS:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="chas" name="chas" placeholder="Enter CHAS">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="nox">NOX:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="nox" name="nox" placeholder="Enter NOX">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="rm">RM:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="rm" name="rm" placeholder="Enter RM">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="age">AGE:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="age" name="age" placeholder="Enter AGE">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="dis">DIS:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="dis" name="dis" placeholder="Enter DIS">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="rad">RAD:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="rad" name="rad" placeholder="Enter RAD">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="tax">TAX:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="tax" name="tax" placeholder="Enter TAX">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="ptratio">PTRATIO:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="ptratio" name="ptratio" placeholder="Enter PTRATIO">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="b">B:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="b" name="b" placeholder="Enter B">
+					</div>
+				</div>
+
+				<div class="form-group" align="center">
+					<label class="control-label col-sm-4" for="lstat">LSTAT:</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="lstat" name="lstat" placeholder="Enter LSTAT">
+					</div>
+				</div>
+			</div>
+			<div align="center">
+				<button type="submit" class="btn btn-success">Submit</button><br><br>
+				<a href="grafico" class="btn btn-info" role="button">Classificadores</a>
+			</div><br>
+		</form>
+	</div>
+</body>
+</html>
