@@ -11,6 +11,7 @@ from sklearn.metrics import mean_squared_error
 from math import sqrt
 from sklearn.model_selection import train_test_split
 
+
 # App config.
 DEBUG = True
 app = Flask(__name__)
