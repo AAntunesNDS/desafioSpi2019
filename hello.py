@@ -11,12 +11,6 @@ from sklearn.metrics import mean_squared_error
 from math import sqrt
 from sklearn.model_selection import train_test_split
 
-import json
-import plotly
-import plotly.offline as py
-import plotly.graph_objs as go
-
-
 # App config.
 DEBUG = True
 app = Flask(__name__)
