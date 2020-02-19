@@ -18,16 +18,6 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
-# Regression config.
-clf = linear_model.LinearRegression()
-
-labels = ['SVM.Svr', 'Bayesian Rigde', 
-		'LassoLars', 'ARDRegression', 'PassiveAgressiveRegressor',
-		'TheilSenRegressor', 'LinearRegression']
-
-values = []
-
-
 class ReusableForm(FlaskForm):
 	crim = DecimalField('CRIM')
 	zn = DecimalField('ZN')
@@ -60,7 +50,7 @@ def hello():
 		ptratio=float(request.form['ptratio'])
 		b=float(request.form['b'])
 		lstat=float(request.form['lstat'])
-		
+
 		#array to predict clf
 		arr = np.array([[crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptratio, b, lstat]])
 
@@ -96,9 +86,13 @@ def compute_clf(x_train, x_test, y_train, y_test):
 
 @app.route('/grafico')
 def bar():
-	bar_labels=labels
-	bar_values=values
-	return render_template('grafico.html', title='Grafico de classificadores', max=20, labels=bar_labels, values=bar_values)
+	labels = ['SVM.Svr', 'Bayesian Rigde',
+		'LassoLars', 'ARDRegression', 'PassiveAgressiveRegressor',
+		'TheilSenRegressor', 'LinearRegression']
+
+	bar_values = values
+	return render_template('grafico.html', title='Grafico de classificadores',
+							max=20, labels=labels, values=bar_values)
 
 
 if __name__ == "__main__":
@@ -108,9 +102,13 @@ if __name__ == "__main__":
 
 	# label
 	y = data['MEDV']
-	
+
 	# features
 	X = data.loc[:, data.columns != 'MEDV']
+
+	# Regression config.
+	clf = linear_model.LinearRegression()
+
 
 	clf.fit(X, y)
 
