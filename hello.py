@@ -18,6 +18,14 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
+
+features = ['CRIM','ZN','INDUS',
+			'CHAS','NOX','RM',
+			'AGE','DIS','RAD',
+			'TAX','PTRATIO','B',
+			'LSTAT']
+
+
 class ReusableForm(FlaskForm):
 	crim = DecimalField('CRIM')
 	zn = DecimalField('ZN')
@@ -37,30 +45,30 @@ class ReusableForm(FlaskForm):
 def hello():
 	form = ReusableForm(request.form)
 	if form.validate_on_submit():
-		crim=float(request.form['crim'])
-		zn=float(request.form['zn'])
-		indus=float(request.form['indus'])
-		chas=int(request.form['chas'])
-		nox=float(request.form['nox'])
-		rm=float(request.form['rm'])
-		age=float(request.form['age'])
-		dis=float(request.form['dis'])
-		rad=int(request.form['rad'])
-		tax=float(request.form['tax'])
-		ptratio=float(request.form['ptratio'])
-		b=float(request.form['b'])
-		lstat=float(request.form['lstat'])
+		crim=float(request.form['CRIM'])
+		zn=float(request.form['ZN'])
+		indus=float(request.form['INDUS'])
+		chas=int(request.form['CHAS'])
+		nox=float(request.form['NOX'])
+		rm=float(request.form['RM'])
+		age=float(request.form['AGE'])
+		dis=float(request.form['DIS'])
+		rad=int(request.form['RAD'])
+		tax=float(request.form['TAX'])
+		ptratio=float(request.form['PTRATIO'])
+		b=float(request.form['B'])
+		lstat=float(request.form['LSTAT'])
 
 		#array to predict clf
 		arr = np.array([[crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptratio, b, lstat]])
-
+		
 		if form.validate():
 		# Save the comment here.
 			flash('{}'.format(clf.predict(arr)))
 		else:
 			flash(form.errors)
 
-	return render_template('hello.html', form=form)
+	return render_template('hello.html', form=form, hd=features)
 
 
 def compute_clf(x_train, x_test, y_train, y_test):
@@ -71,7 +79,8 @@ def compute_clf(x_train, x_test, y_train, y_test):
 	    linear_model.ARDRegression(),
 	    linear_model.PassiveAggressiveRegressor(),
 	    linear_model.TheilSenRegressor(),
-	    linear_model.LinearRegression()]
+	    linear_model.LinearRegression()
+		]
 
 	values = []
 
