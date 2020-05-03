@@ -3,13 +3,7 @@ from flask import Flask, render_template, flash, request, Markup
 from flask_wtf import FlaskForm
 from wtforms import DecimalField, IntegerField, validators, SubmitField
 
-import numpy as np
-import pandas as pd
-from sklearn import linear_model
-from sklearn import svm
-from sklearn.metrics import mean_squared_error
-from math import sqrt
-from sklearn.model_selection import train_test_split
+import regression_models
 
 
 # App config.
@@ -17,13 +11,6 @@ DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
-
-
-features = ['CRIM','ZN','INDUS',
-			'CHAS','NOX','RM',
-			'AGE','DIS','RAD',
-			'TAX','PTRATIO','B',
-			'LSTAT']
 
 
 class ReusableForm(FlaskForm):
@@ -43,6 +30,9 @@ class ReusableForm(FlaskForm):
 
 @app.route("/", methods=['GET', 'POST'])
 def hello():
+	
+	columns_name = regression_models.columns_data[:-1]
+
 	form = ReusableForm(request.form)
 	if form.validate_on_submit():
 		crim=float(request.form['CRIM'])
@@ -60,68 +50,28 @@ def hello():
 		lstat=float(request.form['LSTAT'])
 
 		#array to predict clf
-		arr = np.array([[crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptratio, b, lstat]])
-		
+		arr = [[crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptratio, b, lstat]]
+		predict_value = regression_models.predict_price(arr)
+
 		if form.validate():
-		# Save the comment here.
-			flash('{}'.format(clf.predict(arr)))
+			# Save the comment here.
+			flash('{}'.format(predict_value))
 		else:
 			flash(form.errors)
 
-	return render_template('hello.html', form=form, hd=features)
-
-
-def compute_clf(x_train, x_test, y_train, y_test):
-	classifiers = [
-	    svm.SVR(),
-	    linear_model.BayesianRidge(),
-	    linear_model.LassoLars(),
-	    linear_model.ARDRegression(),
-	    linear_model.PassiveAggressiveRegressor(),
-	    linear_model.TheilSenRegressor(),
-	    linear_model.LinearRegression()
-		]
-
-	values = []
-
-	for clf in classifiers:
-	    clf.fit(x_train, y_train)
-	    y_pred = clf.predict(x_test)
-	    values.append((sqrt(mean_squared_error(y_pred, y_test))))
-
-	return values
-
-
+	return render_template('hello.html', form=form, hd=columns_name)
 
 @app.route('/grafico')
 def bar():
-	labels = ['SVM.Svr', 'Bayesian Rigde',
-		'LassoLars', 'ARDRegression', 'PassiveAgressiveRegressor',
-		'TheilSenRegressor', 'LinearRegression']
+	response = regression_models.compute_rmse_regressors()
 
-	bar_values = values
+	for regressor_name, rmse in response.items():
+		labels = regressor_name
+		bar_values = rmse
+
 	return render_template('grafico.html', title='Grafico de classificadores',
 							max=20, labels=labels, values=bar_values)
 
 
 if __name__ == "__main__":
-	hd = ['CRIM','ZN','INDUS','CHAS','NOX','RM','AGE','DIS','RAD','TAX','PTRATIO','B','LSTAT','MEDV']
-	data = pd.read_csv('housing.data', header=None, delim_whitespace=True)
-	data.columns = hd
-
-	# label
-	y = data['MEDV']
-
-	# features
-	X = data.loc[:, data.columns != 'MEDV']
-
-	# Regression config.
-	clf = linear_model.LinearRegression()
-
-
-	clf.fit(X, y)
-
-	x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=13)
-	values = compute_clf(x_train, x_test, y_train, y_test)
-
 	app.run()
