@@ -60,7 +60,7 @@ def compute_rmse_regressors():
 def predict_price(features_values):
     
     # convert in np array to predict
-    features_values = np.array(features_values)
+    features_values = np.array([features_values])
 
     # load data_dataset
     df = load_dataset()

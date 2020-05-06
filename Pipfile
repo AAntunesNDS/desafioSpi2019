@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 ipykernel = "*"
+pylint = "*"
 
 [packages]
 flask = "*"
@@ -14,4 +15,4 @@ pandas = "*"
 sklearn = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.6"

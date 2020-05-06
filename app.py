@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, flash, request, Markup
 from flask_wtf import FlaskForm
-from wtforms import DecimalField, IntegerField, validators, SubmitField
+from wtforms import DecimalField, IntegerField, SubmitField
+from wtforms.validators import InputRequired
 
 import sys
 sys.path.append('model_api/')
-
 import regression_models
 
 
@@ -15,28 +15,27 @@ app = Flask(__name__, template_folder='templates')
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
-
-class ReusableForm(FlaskForm):
-	crim = DecimalField('CRIM')
-	zn = DecimalField('ZN')
-	indus = DecimalField('INDUS')
-	chas = IntegerField('CHAS')
-	nox = DecimalField('NOX')
-	rm = DecimalField('RM')
-	age = DecimalField('AGE')
-	dis = DecimalField('DIS')
-	rad = IntegerField('RAD')
-	tax = DecimalField('TAX')
-	ptratio = DecimalField('PTRATIO')
-	b = DecimalField('B')
-	lstat = DecimalField('LSTAT')
+class FeaturesForm(FlaskForm):
+	crim 	= DecimalField('CRIM', validators=[InputRequired()])
+	zn 	  	= DecimalField('ZN', validators=[InputRequired()])
+	indus 	= DecimalField('INDUS', validators=[InputRequired()])
+	chas 	= IntegerField('CHAS', validators=[InputRequired()])
+	nox 	= DecimalField('NOX', validators=[InputRequired()])
+	rm 		= DecimalField('RM', validators=[InputRequired()])
+	age 	= DecimalField('AGE', validators=[InputRequired()])
+	dis 	= DecimalField('DIS', validators=[InputRequired()])
+	rad 	= IntegerField('RAD', validators=[InputRequired()])
+	tax 	= DecimalField('TAX', validators=[InputRequired()])
+	ptratio = DecimalField('PTRATIO', validators=[InputRequired()])
+	b 		= DecimalField('B', validators=[InputRequired()])
+	lstat 	= DecimalField('LSTAT',validators=[InputRequired()])
 
 @app.route("/", methods=['GET', 'POST'])
 def hello():
 	
 	columns_name = regression_models.columns_data[:-1]
 
-	form = ReusableForm(request.form)
+	form = FeaturesForm(request.form)
 	if form.validate_on_submit():
 		crim=float(request.form['CRIM'])
 		zn=float(request.form['ZN'])
@@ -53,7 +52,7 @@ def hello():
 		lstat=float(request.form['LSTAT'])
 
 		#array to predict clf
-		arr = [[crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptratio, b, lstat]]
+		arr = [crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptratio, b, lstat]
 		predict_value = regression_models.predict_price(arr)
 
 		if form.validate():
@@ -61,6 +60,9 @@ def hello():
 			flash('{}'.format(predict_value))
 		else:
 			flash(form.errors)
+	
+
+	print(form.errors)
 
 	return render_template('hello.html', form=form, hd=columns_name)
 
